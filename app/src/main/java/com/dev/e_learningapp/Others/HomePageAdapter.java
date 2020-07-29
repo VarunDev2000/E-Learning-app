@@ -15,18 +15,17 @@ import com.dev.e_learningapp.R;
 import com.dev.e_learningapp.User.VideoPlayer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHolder> {
 
     private LayoutInflater layoutInflater;
     private ArrayList<ArrayList<String>> data;
 
-    public Adapter(Context context,ArrayList<ArrayList<String>> data){
+    public HomePageAdapter(Context context, ArrayList<ArrayList<String>> data){
         this.layoutInflater = LayoutInflater.from(context);
         this.data = data;
     }

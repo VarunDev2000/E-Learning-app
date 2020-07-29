@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dev.e_learningapp.Others.ForumAdapter;
 import com.dev.e_learningapp.R;
 import com.dev.e_learningapp.User.HomePage;
 import com.dev.e_learningapp.User.ProfilePage;
@@ -26,6 +29,11 @@ import com.dev.e_learningapp.User.SearchActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
@@ -33,6 +41,8 @@ import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ForumPage extends AppCompatActivity {
@@ -41,6 +51,10 @@ public class ForumPage extends AppCompatActivity {
     private Bitmap imageBitmap;
 
     private EditText post;
+    private RecyclerView recyclerView;
+    private ForumAdapter forumAdapter;
+
+    private ArrayList<ArrayList<String>> Listitems;
 
     private BottomNavigationView bottomNavigationView;
 
@@ -81,6 +95,11 @@ public class ForumPage extends AppCompatActivity {
             }
         });
 
+        //Recycler View
+        recyclerView = findViewById(R.id.recyclerView);
+        getPostdataFromDatabase();
+
+
         post = findViewById(R.id.post);
 
         post.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -98,6 +117,47 @@ public class ForumPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void getPostdataFromDatabase(){
+        Query getPostData = FirebaseDatabase.getInstance().getReference("Posts");
+        Listitems = new ArrayList<>();
+
+        getPostData.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+
+                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                        String name = postSnapshot.child("name").getValue(String.class);
+                        String content = postSnapshot.child("content").getValue(String.class);
+
+                        ArrayList<String> localList = new ArrayList<>();
+                        localList.add(name);
+                        localList.add(content);
+
+                        Listitems.add(localList);
+                    }
+                    initList(Listitems);
+                }
+
+                else{
+                    Toast.makeText(ForumPage.this, "", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ForumPage.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initList(ArrayList<ArrayList<String>>  data){
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Collections.reverse(data);
+        forumAdapter = new ForumAdapter(this,data);
+        recyclerView.setAdapter(forumAdapter);
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
@@ -26,6 +27,8 @@ public class VideoPlayer extends AppCompatActivity{
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
         String videoUri = getIntent().getStringExtra("videoUri");
+
+        Log.d("VIDEO",videoUri);
 
         videoView = findViewById(R.id.videoView);
         progressBar = findViewById(R.id.progressBar);

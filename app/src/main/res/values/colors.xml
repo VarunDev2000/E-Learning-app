@@ -7,4 +7,6 @@
     <color name="red">#DC143C</color>
     <color name="black">#000</color>
     <color name="blue">#3b5998</color>
+    <color name="main_bg">#F5F5F5</color>
+    <color name="line_colour">#D3D3D3</color>
 </resources>

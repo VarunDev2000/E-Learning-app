@@ -23,7 +23,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.dev.e_learningapp.Others.Adapter;
+import com.dev.e_learningapp.Others.HomePageAdapter;
 import com.dev.e_learningapp.Login.LoginActivity;
 import com.dev.e_learningapp.R;
 import com.dev.e_learningapp.User.Forum.ForumPage;
@@ -52,7 +52,7 @@ public class HomePage extends AppCompatActivity {
     private Uri uri;
 
     private RecyclerView recyclerView;
-    private Adapter adapter;
+    private HomePageAdapter homePageAdapter;
     private String[] items;
     private ArrayList<ArrayList<String>> Listitems;
 
@@ -73,9 +73,6 @@ public class HomePage extends AppCompatActivity {
         if(getUserLogin() == false){
             startActivity(new Intent(HomePage.this, LoginActivity.class));
             finish();
-            //Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            //startActivity(intent);
         }
 
         //BottomNav Bar
@@ -140,32 +137,6 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        /*
-
-        search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")){
-                    Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra("textToSearch",s);
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-         */
-
     }
 
     private void getVideodataFromDatabase(){
@@ -207,8 +178,8 @@ public class HomePage extends AppCompatActivity {
     private void initList(ArrayList<ArrayList<String>>  data){
         progressBar.setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new Adapter(this,data);
-        recyclerView.setAdapter(adapter);
+        homePageAdapter = new HomePageAdapter(this,data);
+        recyclerView.setAdapter(homePageAdapter);
     }
 
     private void searchItem(String s){
@@ -219,7 +190,7 @@ public class HomePage extends AppCompatActivity {
             }
         }
 
-        adapter.notifyDataSetChanged();
+        homePageAdapter.notifyDataSetChanged();
     }
 
     private Boolean getUserLogin(){
@@ -228,28 +199,6 @@ public class HomePage extends AppCompatActivity {
         Boolean login = sharedPreferences.getBoolean("login",false);
         return login;
     }
-
-    private String getUsername(){
-        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
-
-        String name = sharedPreferences.getString("name","");
-        return name;
-    }
-
-    private String getEmail(){
-        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
-
-        String email = sharedPreferences.getString("email","");
-        return email;
-    }
-
-    private String getPhoneNo(){
-        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
-
-        String phno = sharedPreferences.getString("phoneNo","");
-        return phno;
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

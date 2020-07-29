@@ -14,7 +14,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dev.e_learningapp.Others.Adapter;
+import com.dev.e_learningapp.Others.HomePageAdapter;
 import com.dev.e_learningapp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,7 +23,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 
@@ -33,7 +32,7 @@ public class SearchActivity extends AppCompatActivity {
     private String textToSearch;
 
     private RecyclerView recyclerView;
-    private Adapter adapter;
+    private HomePageAdapter homePageAdapter;
     private String[] items;
     private ArrayList<ArrayList<String>> Listitems,finalItems;
 
@@ -128,8 +127,8 @@ public class SearchActivity extends AppCompatActivity {
         finalItems = new ArrayList<ArrayList<String>>();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new Adapter(this,finalItems);
-        recyclerView.setAdapter(adapter);
+        homePageAdapter = new HomePageAdapter(this,finalItems);
+        recyclerView.setAdapter(homePageAdapter);
     }
 
     private void searchItem(String s){
@@ -144,7 +143,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
 
-            adapter.notifyDataSetChanged();
+            homePageAdapter.notifyDataSetChanged();
         }
     }
 

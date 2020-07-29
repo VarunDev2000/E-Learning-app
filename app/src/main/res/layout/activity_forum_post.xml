@@ -11,9 +11,6 @@
         android:id="@+id/post_btn"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="5dp"
         android:background="@color/blue"
         android:text="POST"
         android:textColor="@color/white"
@@ -26,15 +23,48 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
-        android:text=""
-        android:hint="Type Something.."
-        android:gravity="top"
         android:background="@color/white"
+        android:gravity="top"
+        android:hint="Type Something.."
         android:padding="10dp"
+        android:text=""
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/post_btn"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="324dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/content"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/content"
+        app:layout_constraintTop_toTopOf="@+id/content"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/posting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="175dp"
+        android:layout_marginEnd="178dp"
+        android:layout_marginBottom="10dp"
+        android:text="Posting.."
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/progressBar"
+        app:layout_constraintEnd_toEndOf="@+id/content"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/content"
+        app:layout_constraintTop_toTopOf="@+id/content"
+        app:layout_constraintVertical_bias="1.0"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
