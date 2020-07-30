@@ -3,10 +3,14 @@ package com.dev.e_learningapp.User.Forum;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -54,8 +58,6 @@ public class ForumPost extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         posting = findViewById(R.id.posting);
 
-        content.requestFocus();
-
 
         post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +89,8 @@ public class ForumPost extends AppCompatActivity {
                                 t.cancel();
 
                                 Intent intent = new Intent(getApplicationContext(), ForumPage.class);
-                                //overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                                 startActivity(intent);
                             }
                         }
@@ -112,28 +115,7 @@ public class ForumPost extends AppCompatActivity {
         String s_phoneNo = getPhoneNo();
 
         final PostHelperClass addPost = new PostHelperClass(s_name,s_content,s_email,s_phoneNo);
-
-
-        Query getTotalData = FirebaseDatabase.getInstance().getReference("Posts");
-        getTotalData.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-
-                if(snapshot.exists()){
-                    reference.child(Long.toString(snapshot.getChildrenCount() + 1)).setValue(addPost);
-                }
-
-                else{
-                    reference.child(Long.toString(1)).setValue(addPost);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                return;
-            }
-        });
+        reference.push().setValue(addPost);
 
     }
 
@@ -160,14 +142,13 @@ public class ForumPost extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
         finish();
-        Pair[] pairs = new Pair[2];
-        pairs[0] = new Pair <View,String>(content,"posttransition");
-        pairs[1] = new Pair <View,String>(post_btn,"bottomnavtransition");
+    }
 
-        Intent intent = new Intent(getApplicationContext(), ForumPage.class);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ForumPost.this, pairs);
-        startActivity(intent,options.toBundle());
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        content.requestFocus();
     }
 }

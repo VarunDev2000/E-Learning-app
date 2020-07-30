@@ -153,11 +153,13 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        Pair[] pairs = new Pair[1];
-        pairs[0] = new Pair <View,String>(search,"searchbartransition");
-
         finish();
+        Pair[] pairs = new Pair[2];
+        pairs[0] = new Pair <View,String>(search,"searchbartransition");
+        pairs[1] = new Pair <View,String>(recyclerView,"recycletransition");
+
         Intent intent = new Intent(getApplicationContext(), HomePage.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SearchActivity.this, pairs);
         startActivity(intent,options.toBundle());
     }

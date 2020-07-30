@@ -14,11 +14,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".User.Forum.ForumPost"></activity>
-        <activity android:name=".User.SearchActivity"
-            android:noHistory="true"/>
+        <activity android:name=".User.Forum.ForumPost"
+            android:windowSoftInputMode="stateVisible"
+            android:noHistory="true"></activity>
+        <activity android:name=".User.SearchActivity" />
         <activity android:name=".User.ProfilePage" />
-        <activity android:name=".User.Forum.ForumPage" />
+        <activity android:name=".User.Forum.ForumPage"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <activity android:name=".Login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

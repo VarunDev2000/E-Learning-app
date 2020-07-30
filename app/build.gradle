@@ -33,6 +33,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     implementation 'com.google.android.exoplayer:exoplayer:2.10.8'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.10.8'

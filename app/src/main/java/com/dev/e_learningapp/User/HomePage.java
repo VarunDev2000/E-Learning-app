@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
@@ -63,7 +65,7 @@ public class HomePage extends AppCompatActivity {
 
     private EditText search;
     private ImageButton camera_btn;
-    private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private Bitmap imageBitmap;
 
@@ -134,14 +136,22 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        //ProgressBar
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+
+        swipeRefreshLayout.setRefreshing(true);
+        getVideodataFromDatabase();
 
         //Recycler View
         recyclerView = findViewById(R.id.recyclerView);
-        //getVideodataFromDatabase();
 
+        //RefreshCheck
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getVideodataFromDatabase();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         //search in RecyclerView
         search = findViewById(R.id.search);
@@ -150,8 +160,9 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
 
-                Pair[] pairs = new Pair[1];
+                Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair <View,String>(search,"searchbartransition");
+                pairs[1] = new Pair <View,String>(recyclerView,"recycletransition");
 
                 Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                 intent.putExtra("textToSearch","");
@@ -164,8 +175,9 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Pair[] pairs = new Pair[1];
+                Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair <View,String>(search,"searchbartransition");
+                pairs[1] = new Pair <View,String>(recyclerView,"recycletransition");
 
                 Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                 intent.putExtra("textToSearch","");
@@ -213,7 +225,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void initList(ArrayList<ArrayList<String>>  data){
-        progressBar.setVisibility(View.GONE);
+        swipeRefreshLayout.setRefreshing(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         homePageAdapter = new HomePageAdapter(this,data);
         recyclerView.setAdapter(homePageAdapter);
@@ -343,11 +355,18 @@ public class HomePage extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if(isTaskRoot()){
+            finish();
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
         bottomNavigationView.setSelectedItemId(R.id.home);
-        getVideodataFromDatabase();
+        //getVideodataFromDatabase();
 
         //Camera button Effects
         final Animation anim = AnimationUtils.loadAnimation(HomePage.this, R.anim.camera_bounce);

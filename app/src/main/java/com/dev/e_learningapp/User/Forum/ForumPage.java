@@ -6,11 +6,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,6 +23,8 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -49,11 +54,14 @@ import java.util.List;
 
 public class ForumPage extends AppCompatActivity {
 
+    public  static  final  String PREFS_NAME = "LocalStorage";
+
     private Uri uri;
     private Bitmap imageBitmap;
 
     private EditText post;
     private RecyclerView recyclerView;
+    public SwipeRefreshLayout swipeRefreshLayout;
     private ForumAdapter forumAdapter;
 
     private ArrayList<ArrayList<String>> Listitems;
@@ -64,6 +72,8 @@ public class ForumPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forum_page);
+
+        post = findViewById(R.id.post);
 
         //BottomNav Bar
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -103,29 +113,29 @@ public class ForumPage extends AppCompatActivity {
             }
         });
 
-        //Recycler View
-        recyclerView = findViewById(R.id.recyclerView);
+
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+
+        swipeRefreshLayout.setRefreshing(true);
         getPostdataFromDatabase();
 
+        //Recycler View
+        recyclerView = findViewById(R.id.recyclerView);
 
-        post = findViewById(R.id.post);
-
-        post.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        //RefreshCheck
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Pair[] pairs = new Pair[2];
-                pairs[0] = new Pair <View,String>(post,"posttransition");
-                pairs[1] = new Pair <View,String>(bottomNavigationView,"bottomnavtransition");
-
-                Intent intent = new Intent(getApplicationContext(), ForumPost.class);
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ForumPage.this, pairs);
-                startActivity(intent,options.toBundle());
+            public void onRefresh() {
+                setEmptyList();
+                //swipeRefreshLayout.setRefreshing(false);
             }
         });
+
 
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair <View,String>(post,"posttransition");
                 pairs[1] = new Pair <View,String>(bottomNavigationView,"bottomnavtransition");
@@ -135,9 +145,10 @@ public class ForumPage extends AppCompatActivity {
                 startActivity(intent,options.toBundle());
             }
         });
+
     }
 
-    private void getPostdataFromDatabase(){
+    public void getPostdataFromDatabase(){
         Query getPostData = FirebaseDatabase.getInstance().getReference("Posts");
         Listitems = new ArrayList<>();
 
@@ -147,12 +158,16 @@ public class ForumPage extends AppCompatActivity {
                 if(snapshot.exists()){
 
                     for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                        String key = postSnapshot.getKey();
                         String name = postSnapshot.child("name").getValue(String.class);
                         String content = postSnapshot.child("content").getValue(String.class);
+                        String phoneNo = postSnapshot.child("phoneNo").getValue(String.class);
 
                         ArrayList<String> localList = new ArrayList<>();
+                        localList.add(key);
                         localList.add(name);
                         localList.add(content);
+                        localList.add(phoneNo);
 
                         Listitems.add(localList);
                     }
@@ -174,8 +189,32 @@ public class ForumPage extends AppCompatActivity {
     private void initList(ArrayList<ArrayList<String>>  data){
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Collections.reverse(data);
-        forumAdapter = new ForumAdapter(this,data);
+        forumAdapter = new ForumAdapter(this,data,getPhoneNo());
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                swipeRefreshLayout.setRefreshing(false);
+                                recyclerView.setAdapter(forumAdapter);
+                            }
+                        });
+                    }
+                },
+                2000
+        );
+    }
+
+    public void setEmptyList(){
+        ArrayList<ArrayList<String>>  data = new ArrayList<ArrayList<String>>();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Collections.reverse(data);
+        forumAdapter = new ForumAdapter(this,data,getPhoneNo());
         recyclerView.setAdapter(forumAdapter);
+        getPostdataFromDatabase();
     }
 
     @Override
@@ -283,11 +322,24 @@ public class ForumPage extends AppCompatActivity {
         }
     }
 
+    private String getPhoneNo(){
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
+
+        String phno = sharedPreferences.getString("phoneNo","");
+        return phno;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
+        post.requestFocus();
         bottomNavigationView.setSelectedItemId(R.id.forum);
         if(imageBitmap != null){
             detectTextFromImage();

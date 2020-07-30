@@ -9,7 +9,7 @@
 
     <EditText
         android:id="@+id/post"
-        android:layout_width="0dp"
+        android:layout_width="392dp"
         android:layout_height="90dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
@@ -21,7 +21,7 @@
         android:inputType="textPersonName"
         android:paddingLeft="12dp"
         android:paddingTop="12dp"
-        android:textColorHint="@color/blue"
+        android:textColorHint="@color/main_bg"
         android:transitionName="posttransition"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,12 +29,11 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
-        android:transitionName="bottomnavtransition"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:paddingTop="5dp"
-        android:layout_width="411dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
+        android:transitionName="bottomnavtransition"
         app:itemBackground="@color/white"
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
@@ -42,20 +41,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
         app:menu="@menu/menu_navigation" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-        android:transitionName="recycletransition"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post" />
+        app:layout_constraintTop_toBottomOf="@+id/post">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/white"
+            android:transitionName="recycletransition"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/post" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
