@@ -2,18 +2,25 @@ package com.dev.e_learningapp.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.e_learningapp.SignUp.GetPhoneNumber;
 import com.dev.e_learningapp.User.HomePage;
 import com.dev.e_learningapp.R;
+import com.dev.e_learningapp.User.SearchActivity;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -24,8 +31,11 @@ public class LoginActivity extends AppCompatActivity {
 
     public  static  final  String PREFS_NAME = "LocalStorage";
 
-    private EditText phonenumber,password;
-    private Button login,signup;
+    private TextInputLayout phonenumber,password;
+    private Button login;
+    private TextView signup,error;
+    private ProgressBar progressBar;
+    private CardView cardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,25 +52,45 @@ public class LoginActivity extends AppCompatActivity {
 
         phonenumber = findViewById(R.id.phonenumber);
         password = findViewById(R.id.password);
+        error = findViewById(R.id.error);
         login = findViewById(R.id.login);
         signup = findViewById(R.id.signup);
+        progressBar = findViewById(R.id.progressBar);
+        cardView = findViewById(R.id.cardView);
+
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                error.setText("");
 
-                final String s_phonenumber = "+91" + phonenumber.getText().toString().trim();
-                final String s_password = password.getText().toString().trim();
+                final String s_phonenumber = "+91" + phonenumber.getEditText().getText().toString().trim();
+                final String s_password = password.getEditText().getText().toString().trim();
+
+                login.setClickable(false);
+                progressBar.setVisibility(View.VISIBLE);
 
                 if(s_phonenumber.equals("+91")){
+                    progressBar.setVisibility(View.GONE);
+                    login.setClickable(true);
                     phonenumber.setError("This field cannot be empty");
                 }
 
+                if(!s_phonenumber.equals("+91")){
+                    phonenumber.setError(null);
+                }
+
+                if(!s_password.equals("")){
+                    password.setError(null);
+                }
+
                 if(s_password.equals("")){
+                    progressBar.setVisibility(View.GONE);
+                    login.setClickable(true);
                     password.setError("This field cannot be empty");
                 }
 
-                if(!s_password.equals("+91") && !s_phonenumber.equals("")){
+                if(!s_password.equals("") && !s_phonenumber.equals("+91")){
 
                     Query checkUser = FirebaseDatabase.getInstance().getReference("Users").orderByChild("phoneNo").equalTo(s_phonenumber);
 
@@ -68,7 +98,6 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if(snapshot.exists()){
-                                phonenumber.setError(null);
 
                                 String user_pass = snapshot.child(s_phonenumber).child("password").getValue(String.class);
 
@@ -80,24 +109,35 @@ public class LoginActivity extends AppCompatActivity {
 
                                     setUserLogin(true);
                                     setUserDetails(name,email,phoneNo);
+                                    progressBar.setVisibility(View.GONE);
+                                    login.setClickable(true);
 
                                     Intent intent = new Intent(getApplicationContext(), HomePage.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
+
                                 }
                                 else{
-                                    Toast.makeText(LoginActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.GONE);
+                                    login.setClickable(true);
+                                    error.setText("Invalid Password");
+                                    //Toast.makeText(LoginActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
                             else{
-                                Toast.makeText(LoginActivity.this, "No such user data exist", Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.GONE);
+                                login.setClickable(true);
+                                error.setText("No such user exist");
+                                //Toast.makeText(LoginActivity.this, "No such user exist", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(LoginActivity.this, "Some error..Please try again later!!", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                            login.setClickable(true);
+                            Toast.makeText(LoginActivity.this, "Please try again later", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -109,6 +149,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), GetPhoneNumber.class);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 startActivity(intent);
             }
         });

@@ -3,60 +3,53 @@ package com.dev.e_learningapp.User;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
+import com.dev.e_learningapp.Login.LoginActivity;
 import com.dev.e_learningapp.R;
 import com.dev.e_learningapp.User.Forum.ForumPage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfilePage extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigationView;
+    public  static  final  String PREFS_NAME = "LocalStorage";
+
+    private Button logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
 
-        //BottomNav Bar
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        logout = findViewById(R.id.logout);
 
-        bottomNavigationView.setSelectedItemId(R.id.profile);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        logout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-                switch (menuItem.getItemId()){
-
-                    case R.id.home:
-                        startActivity(new Intent(getApplicationContext(),HomePage.class));
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-                        return true;
-
-                    case R.id.forum:
-                        startActivity(new Intent(getApplicationContext(), ForumPage.class));
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-                        return true;
-
-                    case R.id.camera_btn:
-                        startActivity(new Intent(getApplicationContext(),ForumPage.class));
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-                        return true;
-
-                    case R.id.profile:
-                        return true;
-                }
-
-                return false;
+            public void onClick(View v) {
+                logout();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
+
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bottomNavigationView.setSelectedItemId(R.id.profile);
+    public void logout(){
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString("name","");
+        editor.putString("email","");
+        editor.putString("phoneNo","");
+        editor.putBoolean("login",false);
+        editor.apply();
     }
+
 }

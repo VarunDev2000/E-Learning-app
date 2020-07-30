@@ -22,7 +22,8 @@
         <activity android:name=".User.Forum.ForumPage"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <activity android:name=".Login.LoginActivity">
+        <activity android:name=".Login.LoginActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,8 +37,10 @@
                 android:name="com.google.firebase.ml.vision.DEPENDENCIES"
                 android:value="ocr" />
         </activity>
-        <activity android:name=".SignUp.GetUserDetails" />
-        <activity android:name=".SignUp.OTPVerification" />
+        <activity android:name=".SignUp.GetUserDetails"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity android:name=".SignUp.OTPVerification"
+            android:noHistory="true"/>
         <activity android:name=".SignUp.GetPhoneNumber" />
         <activity
             android:name=".User.VideoPlayer"

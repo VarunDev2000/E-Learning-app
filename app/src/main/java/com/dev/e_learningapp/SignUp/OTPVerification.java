@@ -2,18 +2,24 @@ package com.dev.e_learningapp.SignUp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.dev.e_learningapp.R;
+import com.dev.e_learningapp.User.Forum.ForumPage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +32,10 @@ import java.util.concurrent.TimeUnit;
 public class OTPVerification extends AppCompatActivity {
 
     Button verify;
-    EditText otp;
+    TextInputLayout otp;
+    CardView cardView;
+    ProgressBar progressBar;
+
     String verificationCodeBySystem;
 
     @Override
@@ -36,6 +45,8 @@ public class OTPVerification extends AppCompatActivity {
 
         verify = findViewById(R.id.verify);
         otp = findViewById(R.id.otp);
+        cardView = findViewById(R.id.cardView);
+        progressBar = findViewById(R.id.progressBar);
 
         String phoneNo = getIntent().getStringExtra("phoneNo");
 
@@ -45,10 +56,16 @@ public class OTPVerification extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String code = otp.getText().toString();
+                progressBar.setVisibility(View.VISIBLE);
+                verify.setClickable(false);
+
+                String code = otp.getEditText().getText().toString();
 
                 if (code.isEmpty() || code.length() < 6) {
-                    otp.setError("Wrong OTP...");
+                    progressBar.setVisibility(View.GONE);
+                    verify.setClickable(true);
+
+                    otp.setError("Wrong OTP");
                     otp.requestFocus();
                     return;
                 }
@@ -86,6 +103,8 @@ public class OTPVerification extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
+            progressBar.setVisibility(View.GONE);
+            verify.setClickable(true);
             Toast.makeText(OTPVerification.this,e.getMessage(),Toast.LENGTH_SHORT).show();
         }
     };
@@ -102,20 +121,33 @@ public class OTPVerification extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            progressBar.setVisibility(View.GONE);
+                            verify.setClickable(true);
 
                             String phoneNo = getIntent().getStringExtra("phoneNo");
                             Intent intent = new Intent(getApplicationContext(), GetUserDetails.class);
                             intent.putExtra("phoneNo",phoneNo);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                             startActivity(intent);
 
                         }
 
                         else{
+                            progressBar.setVisibility(View.GONE);
+                            verify.setClickable(true);
                             Toast.makeText(OTPVerification.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        progressBar.setVisibility(View.GONE);
+        Intent intent = new Intent(getApplicationContext(), GetPhoneNumber.class);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        startActivity(intent);
+    }
 }
