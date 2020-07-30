@@ -20,12 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHolder> {
+public class SearchActivityAdapter extends RecyclerView.Adapter<SearchActivityAdapter.ViewHolder> {
 
     private LayoutInflater layoutInflater;
     private ArrayList<ArrayList<String>> data;
 
-    public HomePageAdapter(Context context, ArrayList<ArrayList<String>> data){
+    public SearchActivityAdapter(Context context, ArrayList<ArrayList<String>> data){
         this.layoutInflater = LayoutInflater.from(context);
         this.data = data;
     }
@@ -63,7 +63,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
             super(itemView);
 
             card = itemView.findViewById(R.id.card);
-            Animation scaleUp = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.scaleup);
+            Animation scaleUp = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.search_activity_scale_up);
             card.startAnimation(scaleUp);
 
             itemView.setOnClickListener(new View.OnClickListener() {

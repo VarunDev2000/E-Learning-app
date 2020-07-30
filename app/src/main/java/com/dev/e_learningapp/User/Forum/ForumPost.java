@@ -3,9 +3,11 @@ package com.dev.e_learningapp.User.Forum;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -154,5 +156,18 @@ public class ForumPost extends AppCompatActivity {
 
         String phno = sharedPreferences.getString("phoneNo","");
         return phno;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        finish();
+        Pair[] pairs = new Pair[2];
+        pairs[0] = new Pair <View,String>(content,"posttransition");
+        pairs[1] = new Pair <View,String>(post_btn,"bottomnavtransition");
+
+        Intent intent = new Intent(getApplicationContext(), ForumPage.class);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ForumPost.this, pairs);
+        startActivity(intent,options.toBundle());
     }
 }

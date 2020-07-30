@@ -40,7 +40,7 @@ public class ProfilePage extends AppCompatActivity {
                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                         return true;
 
-                    case R.id.camera:
+                    case R.id.camera_btn:
                         startActivity(new Intent(getApplicationContext(),ForumPage.class));
                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                         return true;

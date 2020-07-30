@@ -4,31 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".User.HomePage"
-    android:background="#ccc">
+    android:background="@drawable/background"
+    tools:context=".User.HomePage">
 
     <EditText
         android:id="@+id/search"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="12dp"
-        android:background="@color/white"
+        android:background="@drawable/search_bar"
+        android:drawableLeft="@drawable/ic_search"
+        android:drawablePadding="6dp"
+        android:elevation="10dp"
         android:ems="10"
         android:hint="Search"
         android:inputType="textPersonName"
         android:paddingLeft="10dp"
+        android:transitionName="searchbartransition"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
+        android:transitionName="bottomnavtransition"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingTop="5dp"
         app:itemBackground="@color/white"
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
@@ -41,16 +48,16 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:transitionName="recycletransition"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="57dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/bottom_navigation"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/search" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -61,11 +68,41 @@
         android:layout_marginTop="266dp"
         android:layout_marginEnd="177dp"
         android:layout_marginBottom="303dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="@+id/recyclerView"
         app:layout_constraintStart_toStartOf="@+id/recyclerView"
-        app:layout_constraintTop_toTopOf="@+id/recyclerView"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="@+id/recyclerView" />
+
+    <ImageButton
+        android:id="@+id/camera_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="9dp"
+        android:background="@drawable/camera_button"
+        android:scaleType="center"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_camera" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="178dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="175dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Doubt?"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/camera_btn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

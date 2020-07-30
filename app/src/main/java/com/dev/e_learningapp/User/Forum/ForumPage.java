@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -74,8 +76,14 @@ public class ForumPage extends AppCompatActivity {
                 switch (menuItem.getItemId()){
 
                     case R.id.home:
-                        startActivity(new Intent(getApplicationContext(), HomePage.class));
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                        Pair[] pairs = new Pair[3];
+                        pairs[0] = new Pair <View,String>(post,"searchbartransition");
+                        pairs[1] = new Pair <View,String>(bottomNavigationView,"bottomnavtransition");
+                        pairs[2] = new Pair <View,String>(recyclerView,"recycletransition");
+
+                        Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ForumPage.this, pairs);
+                        startActivity(intent,options.toBundle());
                         return true;
 
                     case R.id.forum:
@@ -105,16 +113,26 @@ public class ForumPage extends AppCompatActivity {
         post.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                Pair[] pairs = new Pair[2];
+                pairs[0] = new Pair <View,String>(post,"posttransition");
+                pairs[1] = new Pair <View,String>(bottomNavigationView,"bottomnavtransition");
+
                 Intent intent = new Intent(getApplicationContext(), ForumPost.class);
-                startActivity(intent);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ForumPage.this, pairs);
+                startActivity(intent,options.toBundle());
             }
         });
 
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Pair[] pairs = new Pair[2];
+                pairs[0] = new Pair <View,String>(post,"posttransition");
+                pairs[1] = new Pair <View,String>(bottomNavigationView,"bottomnavtransition");
+
                 Intent intent = new Intent(getApplicationContext(), ForumPost.class);
-                startActivity(intent);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ForumPage.this, pairs);
+                startActivity(intent,options.toBundle());
             }
         });
     }
@@ -256,7 +274,7 @@ public class ForumPage extends AppCompatActivity {
                 && grantResults[1] == PackageManager.PERMISSION_GRANTED
                 && grantResults[2] == PackageManager.PERMISSION_GRANTED)
         {
-            bottomNavigationView.setSelectedItemId(R.id.camera);
+            bottomNavigationView.setSelectedItemId(R.id.camera_btn);
             CropImage.activity().start(ForumPage.this);
         }
         else {

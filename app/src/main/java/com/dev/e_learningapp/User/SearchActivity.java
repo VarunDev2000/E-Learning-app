@@ -5,16 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dev.e_learningapp.Others.HomePageAdapter;
+import com.dev.e_learningapp.Others.SearchActivityAdapter;
 import com.dev.e_learningapp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +35,7 @@ public class SearchActivity extends AppCompatActivity {
     private String textToSearch;
 
     private RecyclerView recyclerView;
-    private HomePageAdapter homePageAdapter;
+    private SearchActivityAdapter searchActivityAdapter;
     private String[] items;
     private ArrayList<ArrayList<String>> Listitems,finalItems;
 
@@ -127,8 +130,8 @@ public class SearchActivity extends AppCompatActivity {
         finalItems = new ArrayList<ArrayList<String>>();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        homePageAdapter = new HomePageAdapter(this,finalItems);
-        recyclerView.setAdapter(homePageAdapter);
+        searchActivityAdapter = new SearchActivityAdapter(this,finalItems);
+        recyclerView.setAdapter(searchActivityAdapter);
     }
 
     private void searchItem(String s){
@@ -143,18 +146,20 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
 
-            homePageAdapter.notifyDataSetChanged();
+            searchActivityAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
     public void onBackPressed() {
 
+        Pair[] pairs = new Pair[1];
+        pairs[0] = new Pair <View,String>(search,"searchbartransition");
+
         finish();
         Intent intent = new Intent(getApplicationContext(), HomePage.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-        startActivity(intent);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SearchActivity.this, pairs);
+        startActivity(intent,options.toBundle());
     }
 
 }

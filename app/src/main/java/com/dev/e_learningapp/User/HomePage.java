@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,9 +18,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -57,6 +62,7 @@ public class HomePage extends AppCompatActivity {
     private ArrayList<ArrayList<String>> Listitems;
 
     private EditText search;
+    private ImageButton camera_btn;
     private ProgressBar progressBar;
 
     private Bitmap imageBitmap;
@@ -70,10 +76,25 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
         if(getUserLogin() == false){
             startActivity(new Intent(HomePage.this, LoginActivity.class));
             finish();
         }
+
+        camera_btn = findViewById(R.id.camera_btn);
+
+        camera_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Card Effects
+                final Animation anim = AnimationUtils.loadAnimation(v.getContext(), R.anim.bounce);
+                camera_btn.startAnimation(anim);
+                verifyPermissions();
+            }
+        });
 
         //BottomNav Bar
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -89,8 +110,14 @@ public class HomePage extends AppCompatActivity {
                         return true;
 
                     case R.id.forum:
-                        startActivity(new Intent(getApplicationContext(), ForumPage.class));
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                        Pair[] pairs = new Pair[2];
+                        pairs[0] = new Pair <View,String>(bottomNavigationView,"bottomnavtransition");
+                        pairs[1] = new Pair <View,String>(recyclerView,"recycletransition");
+                        //pairs[2] = new Pair <View,String>(search,"searchbartransition");
+
+                        Intent intent = new Intent(getApplicationContext(), ForumPage.class);
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(HomePage.this, pairs);
+                        startActivity(intent,options.toBundle());
                         return true;
 
                     case R.id.camera:
@@ -113,7 +140,7 @@ public class HomePage extends AppCompatActivity {
 
         //Recycler View
         recyclerView = findViewById(R.id.recyclerView);
-        getVideodataFromDatabase();
+        //getVideodataFromDatabase();
 
 
         //search in RecyclerView
@@ -122,18 +149,28 @@ public class HomePage extends AppCompatActivity {
         search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+
+                Pair[] pairs = new Pair[1];
+                pairs[0] = new Pair <View,String>(search,"searchbartransition");
+
                 Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                 intent.putExtra("textToSearch","");
-                startActivity(intent);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(HomePage.this, pairs);
+                startActivity(intent,options.toBundle());
             }
         });
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Pair[] pairs = new Pair[1];
+                pairs[0] = new Pair <View,String>(search,"searchbartransition");
+
                 Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                 intent.putExtra("textToSearch","");
-                startActivity(intent);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(HomePage.this, pairs);
+                startActivity(intent,options.toBundle());
             }
         });
 
@@ -296,7 +333,7 @@ public class HomePage extends AppCompatActivity {
                 && grantResults[1] == PackageManager.PERMISSION_GRANTED
                 && grantResults[2] == PackageManager.PERMISSION_GRANTED)
         {
-            bottomNavigationView.setSelectedItemId(R.id.camera);
+            bottomNavigationView.setSelectedItemId(R.id.camera_btn);
             CropImage.activity().start(HomePage.this);
         }
         else {
@@ -310,6 +347,12 @@ public class HomePage extends AppCompatActivity {
         super.onResume();
 
         bottomNavigationView.setSelectedItemId(R.id.home);
+        getVideodataFromDatabase();
+
+        //Camera button Effects
+        final Animation anim = AnimationUtils.loadAnimation(HomePage.this, R.anim.camera_bounce);
+        camera_btn.startAnimation(anim);
+
         if(imageBitmap != null){
             detectTextFromImage();
         }
