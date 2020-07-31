@@ -3,13 +3,18 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/alex_brush</item>
         <item>@font/andika</item>
+        <item>@font/anonymous_pro_bold</item>
         <item>@font/architects_daughter</item>
         <item>@font/armata</item>
         <item>@font/atomic_age</item>
+        <item>@font/average_sans</item>
         <item>@font/catamaran_light</item>
+        <item>@font/copse</item>
         <item>@font/laila</item>
         <item>@font/laila_light</item>
         <item>@font/poppins</item>
+        <item>@font/poppins_medium</item>
         <item>@font/poppins_semibold</item>
+        <item>@font/roboto_medium</item>
     </array>
 </resources>
