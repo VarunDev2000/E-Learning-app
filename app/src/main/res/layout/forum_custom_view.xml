@@ -11,8 +11,8 @@
         android:id="@+id/card"
         android:layout_width="411dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
                 android:fontFamily="@font/poppins"
                 android:padding="10dp"
                 android:text="Sample Post Content"
@@ -40,19 +41,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
-            <View
-                android:id="@+id/view"
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:background="@color/line_colour"
-                app:layout_constraintBottom_toTopOf="@+id/post_author"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/content" />
 
             <TextView
                 android:id="@+id/post_author"
@@ -66,8 +54,7 @@
                 android:text="Author name"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/del_post"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ImageButton
                 android:id="@+id/del_post"

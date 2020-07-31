@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,8 +68,7 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ViewHolder> 
         holder.content.setText(s_content);
 
         if(!s_phoneNo.equals(user_phoneNo)){
-            holder.constrain.setBackgroundColor(0x512C75A0);
-            holder.line.setBackground(ContextCompat.getDrawable(c, R.color.others_line_colour));
+            holder.constrain.setBackgroundColor(Color.parseColor("#F1ECED"));
 
             holder.del_post.setVisibility(View.GONE);
 
@@ -103,7 +103,6 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ViewHolder> 
         ImageButton del_post;
         CardView cardView;
         ConstraintLayout constrain;
-        View line;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,7 +112,6 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ViewHolder> 
             del_post = itemView.findViewById(R.id.del_post);
             cardView = itemView.findViewById(R.id.card);
             constrain = itemView.findViewById(R.id.constrain);
-            line = itemView.findViewById(R.id.view);
         }
     }
 

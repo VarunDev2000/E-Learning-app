@@ -4,11 +4,18 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="white">#FFFFFF</color>
-    <color name="red">#DC143C</color>
+    <color name="red">#FF0000</color>
     <color name="black">#000</color>
     <color name="blue">#3b5998</color>
-    <color name="main_bg">#186496</color>
-    <color name="card_bg">#D3186496</color>
-    <color name="others_line_colour">#992C75A0</color>
-    <color name="line_colour">#D3D3D3</color>
+
+    <color name="main_bg">#DC143C</color>
+    <color name="main_bg_light_colour">#F1ECED</color>
+
+
+    <color name="test_bg">#F5D6C9</color>
+    <color name="card_bg">#FAF5F0</color>
+    <color name="nav_bg">#68FFC6A7</color>
+    <color name="home_card_bg">#FFD3C3</color>
+    <color name="orange">#FF4F00</color>
+
 </resources>

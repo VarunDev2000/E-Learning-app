@@ -4,19 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:paddingTop="0dp"
-    android:paddingBottom="0dp">
+    android:padding="0dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card"
         android:layout_width="411dp"
         android:layout_height="wrap_content"
-        app:cardElevation="4dp"
+        app:cardElevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:cardUseCompatPadding="true"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="7dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,15 +25,18 @@
 
             <ImageView
                 android:id="@+id/imageView"
+                android:layout_width="170dp"
+                android:layout_height="115dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/imageview_rounded_outline"
                 android:outlineProvider="background"
-                android:layout_width="180dp"
-                android:layout_height="125dp"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:color/background_dark"
-                android:visibility="visible"/>
+                app:srcCompat="@android:color/background_dark" />
 
             <ImageButton
                 android:id="@+id/play"
@@ -56,8 +58,9 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="16dp"
+                android:fontFamily="@font/catamaran_light"
                 android:text="Sample Card Title"
-                android:textColor="@color/main_bg"
+                android:textColor="@color/black"
                 android:textSize="17sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView"

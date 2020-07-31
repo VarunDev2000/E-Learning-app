@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -54,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         error = findViewById(R.id.error);
         login = findViewById(R.id.login);
-        signup = findViewById(R.id.signup);
+        signup = (TextView)findViewById(R.id.signup);
         progressBar = findViewById(R.id.progressBar);
         cardView = findViewById(R.id.cardView);
 
@@ -62,6 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                closeKeyboard();
                 error.setText("");
 
                 final String s_phonenumber = "+91" + phonenumber.getEditText().getText().toString().trim();
@@ -178,5 +182,13 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("email",email);
         editor.putString("phoneNo",phoneNo);
         editor.apply();
+    }
+
+    private void closeKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

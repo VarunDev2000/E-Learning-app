@@ -142,7 +142,12 @@ public class ForumPost extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        Pair[] pairs = new Pair[1];
+        pairs[0] = new Pair <View,String>(content,"recycletransition");
+
+        Intent intent = new Intent(getApplicationContext(), ForumPage.class);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ForumPost.this, pairs);
+        startActivity(intent,options.toBundle());
     }
 
     @Override

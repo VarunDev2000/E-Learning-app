@@ -2,6 +2,7 @@ package com.dev.e_learningapp.User;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,10 +22,12 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -58,13 +61,17 @@ public class HomePage extends AppCompatActivity {
 
     private Uri uri;
 
+    private int count_for_exit;
+    private boolean exitActivity;
+
     private RecyclerView recyclerView;
     private HomePageAdapter homePageAdapter;
     private String[] items;
     private ArrayList<ArrayList<String>> Listitems;
 
+    private CardView forumCard;
     private EditText search;
-    private ImageButton camera_btn;
+    private Button camera_btn;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private Bitmap imageBitmap;
@@ -98,6 +105,7 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+
         //BottomNav Bar
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -112,21 +120,17 @@ public class HomePage extends AppCompatActivity {
                         return true;
 
                     case R.id.forum:
-                        Pair[] pairs = new Pair[2];
-                        pairs[0] = new Pair <View,String>(bottomNavigationView,"bottomnavtransition");
-                        pairs[1] = new Pair <View,String>(recyclerView,"recycletransition");
-                        //pairs[2] = new Pair <View,String>(search,"searchbartransition");
+                        Pair[] pairs = new Pair[1];
+                        pairs[0] = new Pair <View,String>(recyclerView,"recycletransition");
 
+                        exitActivity = true;
                         Intent intent = new Intent(getApplicationContext(), ForumPage.class);
                         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(HomePage.this, pairs);
                         startActivity(intent,options.toBundle());
                         return true;
 
-                    case R.id.camera:
-                        verifyPermissions();
-                        return true;
-
                     case R.id.profile:
+                        exitActivity = true;
                         startActivity(new Intent(getApplicationContext(),ProfilePage.class));
                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                         return true;
@@ -164,6 +168,7 @@ public class HomePage extends AppCompatActivity {
                 pairs[0] = new Pair <View,String>(search,"searchbartransition");
                 pairs[1] = new Pair <View,String>(recyclerView,"recycletransition");
 
+                exitActivity = true;
                 Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                 intent.putExtra("textToSearch","");
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(HomePage.this, pairs);
@@ -179,6 +184,7 @@ public class HomePage extends AppCompatActivity {
                 pairs[0] = new Pair <View,String>(search,"searchbartransition");
                 pairs[1] = new Pair <View,String>(recyclerView,"recycletransition");
 
+                exitActivity = true;
                 Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                 intent.putExtra("textToSearch","");
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(HomePage.this, pairs);
@@ -311,6 +317,7 @@ public class HomePage extends AppCompatActivity {
             for(FirebaseVisionText.TextBlock block: firebaseVisionText.getTextBlocks()){
                 String text = block.getText();
 
+                finish();
                 Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                 intent.putExtra("textToSearch",text);
                 startActivity(intent);
@@ -345,25 +352,44 @@ public class HomePage extends AppCompatActivity {
                 && grantResults[1] == PackageManager.PERMISSION_GRANTED
                 && grantResults[2] == PackageManager.PERMISSION_GRANTED)
         {
-            bottomNavigationView.setSelectedItemId(R.id.camera_btn);
             CropImage.activity().start(HomePage.this);
         }
         else {
+            finish();
             startActivity(new Intent(getApplicationContext(), HomePage.class));
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
     }
 
+
     @Override
     public void onBackPressed() {
+
+
+        count_for_exit = count_for_exit + 1;
+
+        if(count_for_exit >= 2){
+
+            System.exit(0);
+        }
+        else{
+            Toast.makeText(HomePage.this,"Press back again to exit",Toast.LENGTH_SHORT).show();
+        }
+
+        /*
         if(isTaskRoot()){
             finish();
         }
+
+         */
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        exitActivity = false;
+        count_for_exit = 0;
 
         bottomNavigationView.setSelectedItemId(R.id.home);
         //getVideodataFromDatabase();
@@ -374,6 +400,15 @@ public class HomePage extends AppCompatActivity {
 
         if(imageBitmap != null){
             detectTextFromImage();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if(exitActivity == true) {
+            finish();
         }
     }
 }
